@@ -19,6 +19,22 @@ class Entity:
             self._x = x
 
     @property
+    def char(self):
+        return self._char
+
+    @char.setter
+    def char(self, ch: char):
+            self._char = ch
+
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, color):
+            self._color = color
+
+    @property
     def y(self):
         return self._y
 
