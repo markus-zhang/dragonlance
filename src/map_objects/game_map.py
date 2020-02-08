@@ -1,11 +1,13 @@
 from map_objects.tile import Tile
 from map_objects.rectangle import Rect
+import config as cfg
 
 class GameMap:
     def __init__(self, width: int, height: int):
-        self._width: int = width
-        self._height: int = height
-        self._tiles: list = self.initialize_tiles()
+        self._width: int        = width
+        self._height: int       = height
+        self._tiles: list       = self.initialize_tiles()
+        self._num_rooms: int    = 0
 
     # BEGIN getters and setters
 
@@ -20,6 +22,10 @@ class GameMap:
     @property
     def tiles(self):
         return self._tiles
+
+    @property
+    def num_rooms(self):
+        return self._num_rooms
 
     # END getters and setters
 
@@ -53,7 +59,30 @@ class GameMap:
 
     def rooms_generator_bsp_helper(self, max_num: int, x: int, y: int, w: int, h: int):
         # The recursive helper function
-        
+        """ 
+            Stopping criteria:
+            1. Reaches maximum number of rooms
+            2. The sub space is smaller than (2 * MIN_ROOM_WIDTH) * (2 * MIN_ROOM_HEIGHT)
+        """
+        if self.num_rooms >= cfg.MAX_ROOM_NUM:
+            return
+
+        if w <= 2 * cfg.MIN_ROOM_WIDTH & h <= 2 * cfg.MIN_ROOM_HEIGHT:
+            # Make a room
+            self.create_room(Rect(x, y, w, h), self.tiles)
+
+        """
+            Recursively split the rectangle:
+            1. If width >= 2 * MIN_ROOM_WIDTH, split width
+            2. If height >= 2 * MIN_ROOM_HEIGHT, split height
+        """
+        if w >= 2 * cfg.MIN_ROOM_WIDTH:
+            self.rooms_generator_bsp_helper(max_num, x, y, int(w / 2), h)
+            self.rooms_generator_bsp_helper(max_num, x + int(w / 2) + 1, y, int(w / 2), h)
+            
+        elif h >= 2 * cfg.MIN_ROOM_HEIGHT:
+            self.rooms_generator_bsp_helper(max_num, x, y, w, int(h / 2))
+            self.rooms_generator_bsp_helper(max_num, x, y + int(h / 2) + 1, w, int(h / 2))
 
 
     # END dungeon random generation algorithms
