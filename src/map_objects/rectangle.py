@@ -4,6 +4,8 @@ class Rect:
         self._y1 = y
         self._x2 = x + w
         self._y2 = y + h
+        self._w = w
+        self._h = h
 
     # BEGIN getters and setters
 
@@ -22,6 +24,14 @@ class Rect:
     @property
     def y2(self):
         return self._y2
+
+    @property
+    def w(self):
+        return self._w
+
+    @property
+    def h(self):
+        return self._h
 
     # END getters and setters
 
